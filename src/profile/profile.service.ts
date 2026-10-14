@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { PaginationArgs } from "../common/dto/pagination.args.js";
 import { PrismaService } from "../common/prisma/prisma.service.js";
+import { ProfileArgs } from "./dto/profile.args.js";
 
 @Injectable()
 export class ProfileService {
@@ -15,7 +17,7 @@ export class ProfileService {
     
     constructor(private readonly prisma: PrismaService) {}
 
-    async findOne(args?: { id?: string, slug?: string }) {
+    async findOne(args: ProfileArgs) {
         if (args?.id || args?.slug) {
             return this.prisma.profile.findFirst({
                 where: {
@@ -33,12 +35,12 @@ export class ProfileService {
         });
     }
 
-    async findAll(args?: { limit?: number, offset?: number }) {
+    async findAll(args?: PaginationArgs) {
         return this.prisma.profile.findMany({
             orderBy: { createdAt: 'desc' as const },
             include: this.profileInclude,
-            ...(args?.limit && { take: args.limit }),
-            ...(args?.offset && { skip: args.offset }),
+            ...(args?.limit != null && { take: args.limit }),
+            ...(args?.offset != null && { skip: args.offset }),
         });
     }
 }
