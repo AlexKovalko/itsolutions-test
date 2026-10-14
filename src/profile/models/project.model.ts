@@ -1,5 +1,4 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Profile } from "./profile.model.js";
 
 @ObjectType()
 export class Project {
@@ -20,9 +19,6 @@ export class Project {
 
     @Field(() => String)
     profileId: string;
-
-    @Field(() => Profile)
-    profile: Profile;
 
     @Field(() => Date)
     createdAt: Date = new Date();
