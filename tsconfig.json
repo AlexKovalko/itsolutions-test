@@ -20,6 +20,6 @@
     "strictPropertyInitialization": false,
     "types": ["vitest/globals", "node"]
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*", "test/**/*", "src/common/prisma/generated"],
   "exclude": ["node_modules", "dist"]
 }
