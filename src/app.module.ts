@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validate } from './common/env.validation.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { PrismaModule } from './common/prisma/prisma.module.js';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
@@ -17,7 +18,9 @@ import { PrismaModule } from './common/prisma/prisma.module.js';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: true,
+      path: '/graphql',
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     PrismaModule,
     ProfileModule,
