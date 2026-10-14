@@ -8,11 +8,11 @@ export class Company {
     @Field(() => String)
     name: string;
 
-    @Field(() => String)
-    description?: string;
+    @Field(() => String, { nullable: true })
+    description?: string | null;
 
-    @Field(() => String)
-    url?: string;
+    @Field(() => String, { nullable: true })
+    url?: string | null;
 
     @Field(() => Number)
     sortOrder: number = 0;

@@ -12,8 +12,8 @@ export class Experience {
     @Field(() => Date)
     startDate: Date;
 
-    @Field(() => Date)
-    endDate: Date;
+    @Field(() => Date, { nullable: true })
+    endDate?: Date | null;
 
     @Field(() => [String])
     achievements: string[];
