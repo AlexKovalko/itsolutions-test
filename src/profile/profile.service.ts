@@ -8,7 +8,7 @@ export class ProfileService {
     private readonly profileInclude = {
         links: { orderBy: { sortOrder: 'asc' as const } },
         skills: { orderBy: { sortOrder: 'asc' as const } },
-        experiences: { 
+        experience: { 
             orderBy: { sortOrder: 'asc' as const },
             include: { company: true }
         },
