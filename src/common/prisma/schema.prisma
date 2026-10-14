@@ -27,6 +27,8 @@ model Links {
   sortOrder Int     @default(0)
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@index([profileId])
   @@index([profileId, sortOrder])
@@ -38,6 +40,8 @@ model Skill {
   sortOrder Int     @default(0)
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@index([profileId])
   @@index([profileId, sortOrder])
@@ -64,6 +68,8 @@ model Experience {
   company      Company   @relation(fields: [companyId], references: [id], onDelete: Restrict)
   profileId    String
   profile      Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@index([companyId])
   @@index([profileId])
@@ -78,6 +84,8 @@ model Project {
   sortOrder   Int     @default(0)
   profileId   String
   profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@index([profileId])
   @@index([profileId, sortOrder])

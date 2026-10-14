@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './common/env.validation.js';
 import { ProfileModule } from './profile/profile.module.js';
+import { PrismaModule } from './common/prisma/prisma.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProfileModule } from './profile/profile.module.js';
       autoSchemaFile: true,
       playground: true,
     }),
+    PrismaModule,
     ProfileModule,
   ],
   controllers: [AppController],
