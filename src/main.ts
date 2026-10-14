@@ -6,7 +6,7 @@ import { ConsoleLogger, Logger } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({
-      logLevels: ['error', 'warn'],
+      logLevels: ['error', 'warn', 'log'],
       colors: true,
     }),
   });
@@ -20,6 +20,8 @@ async function bootstrap() {
     ],
     credentials: true,
   });
+
+  app.enableShutdownHooks();
   
   await app.listen(port, () => {
     Logger.log(`Server is running on port ${port}`);
