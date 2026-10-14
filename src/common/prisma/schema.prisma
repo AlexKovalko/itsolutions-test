@@ -8,12 +8,15 @@ datasource db {
 }
 
 model Profile {
-  id          String        @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
   description String
   links       Links[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  skills      Skill[]
+  experience  Experience[]
+  projects    Project[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Links {
@@ -23,6 +26,57 @@ model Links {
   sortOrder Int     @default(0)
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([profileId, sortOrder])
+}
+
+model Skill {
+  id        String  @id @default(cuid())
+  name      String
+  sortOrder Int     @default(0)
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([profileId, sortOrder])
+}
+
+model Company {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  url         String?
+  experience  Experience[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Experience {
+  id           String    @id @default(cuid())
+  position     String
+  startDate    DateTime
+  endDate      DateTime?
+  achievements String[]
+  sortOrder    Int       @default(0)
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  profileId    String
+  profile      Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([profileId])
+  @@index([profileId, sortOrder])
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  url         String
+  sortOrder   Int     @default(0)
+  profileId   String
+  profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@index([profileId])
   @@index([profileId, sortOrder])
