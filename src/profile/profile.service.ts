@@ -7,10 +7,13 @@ import { ProfileArgs } from "./dto/profile.args.js";
 export class ProfileService {
     private readonly profileInclude = {
         links: { orderBy: { sortOrder: 'asc' as const } },
-        skills: { orderBy: { sortOrder: 'asc' as const } },
-        experience: { 
+        skills: {
             orderBy: { sortOrder: 'asc' as const },
-            include: { company: true }
+            include: { company: true },
+        },
+        experience: {
+            orderBy: { sortOrder: 'asc' as const },
+            include: { company: true },
         },
         projects: { orderBy: { sortOrder: 'asc' as const } },
     };

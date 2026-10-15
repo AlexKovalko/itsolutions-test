@@ -27,28 +27,37 @@ const LINKS = [
   { label: "GitHub", url: "https://github.com/AlexKovalko", sortOrder: 3 },
 ] as const;
 
-const SKILLS = [
-  "TypeScript",
-  "Node.js",
-  "NestJS",
-  "PostgreSQL",
-  "AWS",
-  "Cloudflare",
-  "Terraform",
-  "Docker",
-  "Microservices",
-  "Serverless",
-  "RabbitMQ",
-  "Kafka",
-  "Redis",
-  "OpenAI / RAG",
-  "CI/CD",
-  "React",
-  "Nx monorepo",
-  "OAuth 2.0 / JWT / Keycloak",
-  "Stripe",
-  "Tech Lead / mentoring",
-] as const;
+type SkillSeed = {
+  name: string;
+  companyName: string;
+};
+
+/** Primary company where the skill was most recently / heavily used (from CV stacks). */
+const SKILLS: SkillSeed[] = [
+  { name: "React", companyName: "JayDevs" },
+  { name: "Terraform", companyName: "JayDevs" },
+  { name: "CI/CD", companyName: "JayDevs" },
+  { name: "AliCloud", companyName: "JayDevs" },
+  { name: "Cloudflare", companyName: "JayDevs" },
+  { name: "OpenAI / RAG", companyName: "JayDevs" },
+  { name: "TypeScript", companyName: "Instinctools" },
+  { name: "Node.js", companyName: "Instinctools" },
+  { name: "NestJS", companyName: "Instinctools" },
+  { name: "PostgreSQL", companyName: "Instinctools" },
+  { name: "AWS", companyName: "Instinctools" },
+  { name: "Docker", companyName: "Instinctools" },
+  { name: "RabbitMQ", companyName: "Instinctools" },
+  { name: "Kafka", companyName: "Instinctools" },
+  { name: "Nx monorepo", companyName: "Instinctools" },
+  { name: "Stripe", companyName: "Instinctools" },
+  { name: "Microservices", companyName: "Cogniteq" },
+  { name: "Serverless", companyName: "Cogniteq" },
+  { name: "Redis", companyName: "Cogniteq" },
+  { name: "OAuth 2.0 / JWT / Keycloak", companyName: "Cogniteq" },
+  { name: "Tech Lead / mentoring", companyName: "Cogniteq" },
+  { name: "PHP / CMS", companyName: "Yanka Kupala State University of Grodno" },
+  { name: "MySQL", companyName: "Yanka Kupala State University of Grodno" },
+];
 
 type CompanySeed = {
   name: string;
@@ -275,11 +284,18 @@ async function main() {
   });
 
   await prisma.skill.createMany({
-    data: SKILLS.map((name, sortOrder) => ({
-      name,
-      sortOrder,
-      profileId: profile.id,
-    })),
+    data: SKILLS.map((skill, sortOrder) => {
+      const companyId = companyIds.get(skill.companyName);
+      if (!companyId) {
+        throw new Error(`Missing company id for skill "${skill.name}" → ${skill.companyName}`);
+      }
+      return {
+        name: skill.name,
+        sortOrder,
+        profileId: profile.id,
+        companyId,
+      };
+    }),
   });
 
   await prisma.experience.createMany({

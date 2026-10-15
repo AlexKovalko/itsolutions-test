@@ -35,16 +35,19 @@ model Links {
 }
 
 model Skill {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  sortOrder Int     @default(0)
+  sortOrder Int      @default(0)
   profileId String
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([profileId])
   @@index([profileId, sortOrder])
+  @@index([companyId])
 }
 
 model Company {
@@ -53,6 +56,7 @@ model Company {
   description String?
   url         String?
   experience  Experience[]
+  skills      Skill[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
