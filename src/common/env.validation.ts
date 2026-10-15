@@ -2,8 +2,9 @@ import { Logger } from '@nestjs/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { Application } from './configs/application.js';
+import { Database } from './configs/database.js';
 
-const configs: ClassConstructor<object>[] = [Application];
+const configs: ClassConstructor<object>[] = [Application, Database];
 const logger = new Logger('EnvValidation');
 
 export function validate(config: Record<string, unknown>) {

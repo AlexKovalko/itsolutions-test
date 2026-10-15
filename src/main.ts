@@ -1,14 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new ConsoleLogger({
+      logLevels: ['error', 'warn', 'log'],
+      colors: true,
+    }),
+  });
 
   const port: number = app.get(ConfigService).get<number>('PORT') ?? 3000;
-  
-  await app.listen(port, () => {
+
+  app.enableCors({
+    origin: [`http://localhost:${port}`],
+    credentials: true,
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+
+  app.enableShutdownHooks();
+
+  await app.listen(port, '0.0.0.0', () => {
     Logger.log(`Server is running on port ${port}`);
   });
 }

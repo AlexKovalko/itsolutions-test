@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './common/env.validation.js';
+import { ProfileModule } from './profile/profile.module.js';
+import { PrismaModule } from './common/prisma/prisma.module.js';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
@@ -14,11 +15,18 @@ import { validate } from './common/env.validation.js';
       cache: true,
       validate,
     }),
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    // }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      path: '/graphql',
+      introspection: true,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+    PrismaModule,
+    ProfileModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

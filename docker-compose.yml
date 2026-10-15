@@ -1,0 +1,35 @@
+services:
+  postgres:
+    container_name: test-postgres
+    image: postgres:15.1
+    environment:
+      DB_URL: ${DB_URL}
+    entrypoint: ['/bin/bash', '/docker-postgres-entrypoint.sh']
+    volumes:
+      - ./docker/postgres-entrypoint.sh:/docker-postgres-entrypoint.sh:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  app:
+    container_name: test-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DB_URL: ${DB_URL}
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      PORT: ${PORT}
+      DB_URL: ${DB_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
