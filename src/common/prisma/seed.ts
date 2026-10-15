@@ -31,46 +31,34 @@ const LINKS = [
   { label: 'GitHub', url: 'https://github.com/AlexKovalko', sortOrder: 3 },
 ] as const;
 
-type SkillSeed = {
-  name: string;
-  companyName: string;
-};
-
-/** Primary company where the skill was most recently / heavily used (from CV stacks). */
-const SKILLS: SkillSeed[] = [
-  { name: 'React', companyName: 'JayDevs' },
-  { name: 'Terraform', companyName: 'JayDevs' },
-  { name: 'CI/CD', companyName: 'JayDevs' },
-  { name: 'AliCloud', companyName: 'JayDevs' },
-  { name: 'Cloudflare', companyName: 'JayDevs' },
-  { name: 'OpenAI / RAG', companyName: 'JayDevs' },
-  { name: 'TypeScript', companyName: 'Instinctools' },
-  { name: 'Node.js', companyName: 'Instinctools' },
-  { name: 'NestJS', companyName: 'Instinctools' },
-  { name: 'PostgreSQL', companyName: 'Instinctools' },
-  { name: 'AWS', companyName: 'Instinctools' },
-  { name: 'Docker', companyName: 'Instinctools' },
-  { name: 'RabbitMQ', companyName: 'Instinctools' },
-  { name: 'Kafka', companyName: 'Instinctools' },
-  { name: 'Nx monorepo', companyName: 'Instinctools' },
-  { name: 'Stripe', companyName: 'Instinctools' },
-  { name: 'Microservices', companyName: 'Cogniteq' },
-  { name: 'Serverless', companyName: 'Cogniteq' },
-  { name: 'Redis', companyName: 'Cogniteq' },
-  { name: 'OAuth 2.0 / JWT / Keycloak', companyName: 'Cogniteq' },
-  { name: 'Tech Lead / mentoring', companyName: 'Cogniteq' },
-  { name: 'PHP / CMS', companyName: 'Yanka Kupala State University of Grodno' },
-  { name: 'MySQL', companyName: 'Yanka Kupala State University of Grodno' },
-];
-
-type CompanySeed = {
-  name: string;
-  description?: string;
-  url?: string;
-};
+const SKILLS = [
+  'React',
+  'Terraform',
+  'CI/CD',
+  'AliCloud',
+  'Cloudflare',
+  'OpenAI / RAG',
+  'TypeScript',
+  'Node.js',
+  'NestJS',
+  'PostgreSQL',
+  'AWS',
+  'Docker',
+  'RabbitMQ',
+  'Kafka',
+  'Nx monorepo',
+  'Stripe',
+  'Microservices',
+  'Serverless',
+  'Redis',
+  'OAuth 2.0 / JWT / Keycloak',
+  'Tech Lead / mentoring',
+  'PHP / CMS',
+  'MySQL',
+] as const;
 
 type ExperienceSeed = {
-  companyName: string;
+  company: string;
   position: string;
   startDate: Date;
   endDate: Date | null;
@@ -85,34 +73,9 @@ type ProjectSeed = {
   sortOrder: number;
 };
 
-const COMPANIES: CompanySeed[] = [
-  {
-    name: 'JayDevs',
-    description:
-      'Self-employed / contractor — product delivery, full stack and DevOps',
-  },
-  {
-    name: 'Instinctools',
-    description:
-      'Software development company — scalable platforms and integrations',
-    url: 'https://www.instinctools.com',
-  },
-  {
-    name: 'Cogniteq',
-    description:
-      'Software engineering company — products, mobile backends, SaaS',
-    url: 'https://www.cogniteq.com',
-  },
-  {
-    name: 'Yanka Kupala State University of Grodno',
-    description: 'University IT and web resources',
-    url: 'https://www.grsu.by',
-  },
-];
-
 const EXPERIENCES: ExperienceSeed[] = [
   {
-    companyName: 'JayDevs',
+    company: 'JayDevs',
     position: 'Full Stack / DevOps (Self-employed / Contractor)',
     startDate: new Date('2025-09-01'),
     endDate: new Date('2026-07-31'),
@@ -127,7 +90,7 @@ const EXPERIENCES: ExperienceSeed[] = [
     sortOrder: 0,
   },
   {
-    companyName: 'Instinctools',
+    company: 'Instinctools',
     position: 'Senior Backend Developer',
     startDate: new Date('2025-01-01'),
     endDate: new Date('2025-08-31'),
@@ -140,7 +103,7 @@ const EXPERIENCES: ExperienceSeed[] = [
     sortOrder: 1,
   },
   {
-    companyName: 'Cogniteq',
+    company: 'Cogniteq',
     position: 'Senior Backend Developer | Tech Lead',
     startDate: new Date('2017-10-01'),
     endDate: new Date('2024-12-31'),
@@ -153,7 +116,7 @@ const EXPERIENCES: ExperienceSeed[] = [
     sortOrder: 2,
   },
   {
-    companyName: 'Yanka Kupala State University of Grodno',
+    company: 'Yanka Kupala State University of Grodno',
     position: 'Software Engineer',
     startDate: new Date('2012-01-01'),
     endDate: new Date('2017-10-31'),
@@ -246,24 +209,6 @@ const PROJECTS: ProjectSeed[] = [
 ];
 
 async function main() {
-  const companyIds = new Map<string, string>();
-
-  for (const company of COMPANIES) {
-    const row = await prisma.company.upsert({
-      where: { name: company.name },
-      update: {
-        description: company.description,
-        url: company.url,
-      },
-      create: {
-        name: company.name,
-        description: company.description,
-        url: company.url,
-      },
-    });
-    companyIds.set(company.name, row.id);
-  }
-
   const profile = await prisma.profile.upsert({
     where: { slug: PROFILE_SLUG },
     update: {
@@ -291,38 +236,23 @@ async function main() {
   });
 
   await prisma.skill.createMany({
-    data: SKILLS.map((skill, sortOrder) => {
-      const companyId = companyIds.get(skill.companyName);
-      if (!companyId) {
-        throw new Error(
-          `Missing company id for skill "${skill.name}" → ${skill.companyName}`,
-        );
-      }
-      return {
-        name: skill.name,
-        sortOrder,
-        profileId: profile.id,
-        companyId,
-      };
-    }),
+    data: SKILLS.map((name, sortOrder) => ({
+      name,
+      sortOrder,
+      profileId: profile.id,
+    })),
   });
 
   await prisma.experience.createMany({
-    data: EXPERIENCES.map((exp) => {
-      const companyId = companyIds.get(exp.companyName);
-      if (!companyId) {
-        throw new Error(`Missing company id for ${exp.companyName}`);
-      }
-      return {
-        position: exp.position,
-        startDate: exp.startDate,
-        endDate: exp.endDate,
-        achievements: exp.achievements,
-        sortOrder: exp.sortOrder,
-        companyId,
-        profileId: profile.id,
-      };
-    }),
+    data: EXPERIENCES.map((exp) => ({
+      company: exp.company,
+      position: exp.position,
+      startDate: exp.startDate,
+      endDate: exp.endDate,
+      achievements: exp.achievements,
+      sortOrder: exp.sortOrder,
+      profileId: profile.id,
+    })),
   });
 
   await prisma.project.createMany({

@@ -9,11 +9,9 @@ export class ProfileService {
     links: { orderBy: { sortOrder: 'asc' as const } },
     skills: {
       orderBy: { sortOrder: 'asc' as const },
-      include: { company: true },
     },
     experience: {
       orderBy: { sortOrder: 'asc' as const },
-      include: { company: true },
     },
     projects: { orderBy: { sortOrder: 'asc' as const } },
   };

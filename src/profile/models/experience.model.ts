@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Company } from './company.model.js';
 
 @ObjectType()
 export class Experience {
@@ -22,10 +21,7 @@ export class Experience {
   sortOrder: number = 0;
 
   @Field(() => String)
-  companyId: string;
-
-  @Field(() => Company)
-  company: Company;
+  company: string;
 
   @Field(() => String)
   profileId: string;

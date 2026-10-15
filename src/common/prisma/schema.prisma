@@ -40,25 +40,11 @@ model Skill {
   sortOrder Int      @default(0)
   profileId String
   profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Restrict)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
   @@index([profileId, sortOrder])
-  @@index([companyId])
-}
-
-model Company {
-  id          String       @id @default(cuid())
-  name        String       @unique
-  description String?
-  url         String?
-  experience  Experience[]
-  skills      Skill[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
 }
 
 model Experience {
@@ -68,14 +54,12 @@ model Experience {
   endDate      DateTime?
   achievements String[]
   sortOrder    Int       @default(0)
-  companyId    String
-  company      Company   @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  company      String
   profileId    String
   profile      Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  @@index([companyId])
   @@index([profileId])
   @@index([profileId, sortOrder])
 }
