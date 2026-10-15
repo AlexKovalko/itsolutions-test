@@ -26,8 +26,7 @@ ENV DB_URL=$DB_URL
 COPY nest-cli.json tsconfig.json tsconfig.build.json prisma.config.ts ./
 COPY src ./src
 
-RUN pnpm exec prisma generate \
-  && pnpm run build
+RUN pnpm run build
 
 FROM base AS runner
 
