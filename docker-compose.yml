@@ -2,33 +2,34 @@ services:
   postgres:
     container_name: test-postgres
     image: postgres:15.1
-    ports:
-      - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: test_app
+      DB_URL: ${DB_URL}
+    entrypoint: ['/bin/bash', '/docker-postgres-entrypoint.sh']
     volumes:
+      - ./docker/postgres-entrypoint.sh:/docker-postgres-entrypoint.sh:ro
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
 
-  pgbouncer:
-    container_name: test-pgbouncer
-    image: pgbouncer/pgbouncer:1.25
+  app:
+    container_name: test-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DB_URL: ${DB_URL}
     ports:
-      - 6432:6432
+      - ${PORT}:${PORT}
     environment:
-      DATABASES_HOST: postgres
-      DATABASES_PORT: 5432
-      DATABASES_USER: postgres
-      DATABASES_PASSWORD: postgres
-      DATABASES_DBNAME: test_app
-      PGBOUNCER_LISTEN_PORT: 6432
-      PGBOUNCER_POOL_MODE: session
-      PGBOUNCER_SERVER_RESET_QUERY: DISCARD ALL
-      PGBOUNCER_SERVER_LIFETIME: 1800
-      PGBOUNCER_SERVER_IDLE_TIMEOUT: 60
+      PORT: ${PORT}
+      DB_URL: ${DB_URL}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:

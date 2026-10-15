@@ -27,7 +27,7 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  await app.listen(port, () => {
+  await app.listen(port, '0.0.0.0', () => {
     Logger.log(`Server is running on port ${port}`);
   });
 }

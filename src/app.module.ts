@@ -19,6 +19,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       driver: ApolloDriver,
       autoSchemaFile: true,
       path: '/graphql',
+      introspection: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
