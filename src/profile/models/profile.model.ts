@@ -1,38 +1,38 @@
-import { Field, ObjectType } from "@nestjs/graphql";
-import { Skill } from "./skill.model.js";
-import { Link } from "./link.model.js";
-import { Project } from "./project.model.js";
-import { Experience } from "./experience.model.js";
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Skill } from './skill.model.js';
+import { Link } from './link.model.js';
+import { Project } from './project.model.js';
+import { Experience } from './experience.model.js';
 
 @ObjectType()
 export class Profile {
-    @Field(() => String)
-    id: string;
+  @Field(() => String)
+  id: string;
 
-    @Field(() => String)
-    slug: string;
+  @Field(() => String)
+  slug: string;
 
-    @Field(() => String)
-    name: string;
+  @Field(() => String)
+  name: string;
 
-    @Field(() => String)
-    description: string;
+  @Field(() => String)
+  description: string;
 
-    @Field(() => [Link])
-    links: Link[];
+  @Field(() => [Link])
+  links: Link[];
 
-    @Field(() => [Skill])
-    skills: Skill[];
-    
-    @Field(() => [Experience])
-    experience: Experience[];
+  @Field(() => [Skill])
+  skills: Skill[];
 
-    @Field(() => [Project])
-    projects: Project[];
+  @Field(() => [Experience])
+  experience: Experience[];
 
-    @Field(() => Date)
-    createdAt: Date = new Date();
+  @Field(() => [Project])
+  projects: Project[];
 
-    @Field(() => Date)
-    updatedAt: Date = new Date();
+  @Field(() => Date)
+  createdAt: Date = new Date();
+
+  @Field(() => Date)
+  updatedAt: Date = new Date();
 }
